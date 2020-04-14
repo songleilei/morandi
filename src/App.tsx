@@ -1,12 +1,18 @@
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCoffee } from "@fortawesome/free-solid-svg-icons";
+
 import Menu from "./components/Menu/menu";
 import MenuItem from "./components/Menu/menuItem";
 import SubMenu from "./components/Menu/subMenu";
+import Icon from "./components/Icon/icon";
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
+        <Icon theme="danger" icon={faCoffee} />
+        <FontAwesomeIcon icon={faCoffee} size="3x" rotation={90} />
         <Menu mode="horizontal">
           <MenuItem>cool link</MenuItem>
           <MenuItem disabled>cool link 2</MenuItem>
