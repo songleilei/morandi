@@ -2,6 +2,7 @@ import React from "react";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { configure, addDecorator, addParameters } from "@storybook/react";
+import { withInfo } from "@storybook/addon-info";
 
 import "../src/styles/index.scss";
 
@@ -20,6 +21,7 @@ const storyWrapper = (stroyFn: any) => (
 );
 addDecorator(storyWrapper);
 
+addDecorator(withInfo);
 addParameters({ info: { inline: true, header: false } });
 
 const loaderFn = () => {
