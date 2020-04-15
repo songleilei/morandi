@@ -8,16 +8,16 @@ const defaultButton = () => (
 );
 
 const buttonWithSize = () => (
-  <>
+  <div>
     <Button size={ButtonSize.Large}> large Button</Button>
     <br />
     <br />
     <Button size={ButtonSize.Small}> small Button</Button>
-  </>
+  </div>
 );
 
 const buttonWityType = () => (
-  <>
+  <div>
     <Button btnType={ButtonType.Primary}> Primary Button</Button>
     <br />
     <br />
@@ -27,7 +27,7 @@ const buttonWityType = () => (
     <Button btnType={ButtonType.Link} href="https://www.baidu.com">
       Link Button
     </Button>
-  </>
+  </div>
 );
 
 storiesOf("Button Component", module)
