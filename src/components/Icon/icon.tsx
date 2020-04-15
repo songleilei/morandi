@@ -16,7 +16,7 @@ export type ThemeProps =
   | "dark";
 
 export interface IconProps extends FontAwesomeIconProps {
-  theme: ThemeProps;
+  theme?: ThemeProps;
 }
 
 const Icon: React.FC<IconProps> = (props) => {
@@ -27,6 +27,10 @@ const Icon: React.FC<IconProps> = (props) => {
   });
 
   return <FontAwesomeIcon className={classes} {...restProps} />;
+};
+
+Icon.defaultProps = {
+  theme: "primary",
 };
 
 export default Icon;
