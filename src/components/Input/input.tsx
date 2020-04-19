@@ -1,4 +1,9 @@
-import React, { FC, ReactElement, InputHTMLAttributes } from "react";
+import React, {
+  FC,
+  ReactElement,
+  InputHTMLAttributes,
+  ChangeEvent,
+} from "react";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import classnames from "classnames";
 import Icon from "../Icon/icon";
@@ -17,6 +22,7 @@ export interface InputProps
   prepend?: string | ReactElement;
   /** 添加后缀 用于配置一些固定组合 */
   append?: string | ReactElement;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 /**
@@ -36,6 +42,18 @@ export const Input: FC<InputProps> = (props) => {
     "input-group-append": !!prepend,
     "input-group-prepend": !!append,
   });
+
+  const fixControlledValue = (value: any) => {
+    if (typeof value === "undefined" || value === null) {
+      return "";
+    }
+    return value;
+  };
+
+  if ("value" in props) {
+    delete restProps.defaultValue;
+    restProps.value = fixControlledValue(props.value);
+  }
 
   return (
     <div className={cnames} style={style}>
