@@ -27,4 +27,67 @@ describe("test AutoComplete component", () => {
       "auto-complete"
     ) as HTMLInputElement;
   });
+
+  it("test basic AutoComplete behavior", async () => {
+    // input change
+    fireEvent.change(inputNode, { target: { value: "a" } });
+    await wait(() => {
+      expect(wrapper.queryByText("ab")).toBeInTheDocument();
+    });
+    // should have two suggestions items
+    expect(wrapper.container.querySelectorAll(".suggestion-item")).toHaveLength(
+      2
+    );
+    expect(
+      wrapper.container.querySelectorAll(".suggestion-item").length
+    ).toEqual(2);
+    // click the first item
+    fireEvent.click(wrapper.getByText("ab"));
+    expect(testProps.onSelect).toHaveBeenCalledWith({
+      value: "ab",
+      number: 11,
+    });
+    expect(wrapper.queryByText("ab")).not.toBeInTheDocument();
+    // fill the input
+    expect(inputNode.value).toBe("ab");
+  });
+
+  it("should provide keyboard support", async () => {
+    fireEvent.change(inputNode, { target: { value: "a" } });
+    await wait(() => {
+      expect(wrapper.queryByText("ab")).toBeInTheDocument();
+    });
+    const firstResult = wrapper.queryByText("ab");
+    const secondResult = wrapper.queryByText("abc");
+    // arrow down
+    fireEvent.keyDown(inputNode, { keyCode: 40 });
+    expect(firstResult).toHaveClass("is-active");
+    // arrow down
+    fireEvent.keyDown(inputNode, { keyCode: 40 });
+    expect(secondResult).toHaveClass("is-active");
+    // arrow up
+    fireEvent.keyDown(inputNode, { keyCode: 38 });
+    expect(firstResult).toHaveClass("is-active");
+    // enter
+    fireEvent.keyDown(inputNode, { keyCode: 13 });
+    expect(testProps.onSelect).toHaveBeenCalledWith({
+      value: "ab",
+      number: 11,
+    });
+    expect(wrapper.queryByText("ab")).not.toBeInTheDocument();
+  });
+
+  it("click outside should hide the dropdown", async () => {
+    fireEvent.change(inputNode, { target: { value: "a" } });
+    await wait(() => {
+      expect(wrapper.queryByText("ab")).toBeInTheDocument();
+    });
+
+    fireEvent.click(document);
+    expect(wrapper.queryByText("ab")).not.toBeInTheDocument();
+  });
+
+  it("renderOption should generate the right templete", () => {});
+
+  it("async fetchSuggestions should works fine", () => {});
 });

@@ -9,7 +9,6 @@ function useDebounce(value: any, delay = 300) {
     }, delay);
 
     return () => {
-      console.log("clearTimeout");
       clearTimeout(handler);
     };
   }, [value, delay]);
