@@ -76,6 +76,40 @@ const CustomComplete = () => {
   );
 };
 
+const AsyncComplete = () => {
+  const handleFetch = (query: string) => {
+    return fetch(`https://api.github.com/search/users?q=${query}`)
+      .then((res) => res.json())
+      .then(({ items }) => {
+        return items
+          .slice(0, 10)
+          .map((item: any) => ({ value: item.login, ...item }));
+      });
+  };
+
+  const renderOption = (item: DataSourceType) => {
+    const itemWithNumber = item as DataSourceType<{
+      value: string;
+      url: string;
+    }>;
+    return (
+      <>
+        <i>Name：{itemWithNumber.value}</i>
+        <p>url: {itemWithNumber.url}</p>
+      </>
+    );
+  };
+
+  return (
+    <AutoComplete
+      fetchSuggestions={handleFetch}
+      onSelect={action("you selected !")}
+      renderOption={renderOption}
+    />
+  );
+};
+
 storiesOf("AutoComplete Component", module)
   .add("AutoComplete", SimpleComplete)
-  .add("自定义Item", CustomComplete);
+  .add("自定义Item", CustomComplete)
+  .add("异步Item", AsyncComplete);
