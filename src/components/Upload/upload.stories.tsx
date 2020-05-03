@@ -10,10 +10,10 @@ const defaultFileList: UploadFile[] = [
 ];
 
 const checkFileSize = (file: File) => {
-  if (Math.round(file.size / 1024) > 50) {
-    alert("file too big");
-    return false;
-  }
+  // if (Math.round(file.size / 1024) > 50) {
+  //   alert("file too big");
+  //   return false;
+  // }
   return true;
 };
 
