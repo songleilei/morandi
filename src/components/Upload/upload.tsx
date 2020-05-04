@@ -2,6 +2,7 @@ import React, { FC, useRef, ChangeEvent, useState } from "react";
 import axios from "axios";
 import UploadList from "./uploadList";
 import Button, { ButtonType } from "../Button/button";
+import Dragger from "./dragger";
 
 export type UploadFileStatus = "ready" | "uploading" | "success" | "error";
 
@@ -25,6 +26,13 @@ export interface UploadProps {
   onError?: (err: any, file: File) => void;
   onChange?: (file: File) => void;
   onRemove?: (file: UploadFile) => void;
+  headers?: { [key: string]: any };
+  name?: string;
+  data?: { [key: string]: any };
+  withCredentials?: boolean;
+  accept?: string;
+  multiple?: boolean;
+  drag?: boolean;
 }
 
 export const Upload: FC<UploadProps> = (props) => {
@@ -37,6 +45,14 @@ export const Upload: FC<UploadProps> = (props) => {
     onError,
     onChange,
     onRemove,
+    name,
+    headers,
+    data,
+    withCredentials,
+    accept,
+    multiple,
+    children,
+    drag,
   } = props;
 
   const fileInput = useRef<HTMLInputElement | null>(null);
@@ -109,13 +125,23 @@ export const Upload: FC<UploadProps> = (props) => {
       raw: file,
     };
 
-    setFileList([_file, ...fileList]);
+    setFileList((pervList) => {
+      return [...pervList, _file];
+    });
 
     const formData = new FormData();
-    formData.append(file.name, file);
+    formData.append(name || "file", file);
+
+    if (data) {
+      Object.keys(data).forEach((key) => {
+        formData.append(key, data[key]);
+      });
+    }
+
     axios
       .post(action, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: { ...headers, "Content-Type": "multipart/form-data" },
+        withCredentials,
         onUploadProgress: (e) => {
           let percentage = Math.round((e.loaded * 100) / e.total) || 0;
           if (percentage < 100) {
@@ -156,19 +182,35 @@ export const Upload: FC<UploadProps> = (props) => {
 
   return (
     <div className="morandi-upload-component">
-      <Button btnType={ButtonType.Primary} onClick={handleClick}>
-        UploadFile
-      </Button>
-      <input
-        className="morandi-file-input"
-        style={{ display: "none" }}
-        type="file"
-        ref={fileInput}
-        onChange={handleFileChange}
-      />
+      <div
+        className="morandi-upload-input"
+        style={{ display: "inline-block" }}
+        onClick={handleClick}
+      >
+        {drag ? (
+          <Dragger onFile={(files) => uploadFiles(files)}>{children}</Dragger>
+        ) : (
+          children
+        )}
+
+        <input
+          className="morandi-file-input"
+          style={{ display: "none" }}
+          type="file"
+          ref={fileInput}
+          onChange={handleFileChange}
+          accept={accept}
+          multiple={multiple}
+        />
+      </div>
+
       <UploadList fileList={fileList} onRemove={handleRemove} />
     </div>
   );
+};
+
+Upload.defaultProps = {
+  name: "file",
 };
 
 export default Upload;

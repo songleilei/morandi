@@ -32,7 +32,10 @@ const SimpleUpload = () => {
       onError={action("onError")}
       onChange={action("onChange")}
       beforeUpload={checkFileSize}
-    />
+      drag
+    >
+      <p>drag file to upload</p>
+    </Upload>
   );
 };
 
