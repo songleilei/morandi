@@ -7,7 +7,7 @@ env:
 
 # Install dependence
 install:
-  - npm install
+  - yarn
 
 # Cache the node_modules folder and don't need to download and install all npm packages every time.
 cache:
